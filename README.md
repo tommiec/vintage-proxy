@@ -121,13 +121,11 @@ the G3.
   to skip transcoding per site. Functionally in the same category as Macproxy/WebOne, but
   a Node/Yarn build rather than a ready-made Docker image, so it would need its own
   container and a G3 test before adoption. BSD-3-Clause.
-- **ProtoWeb** (<https://protoweb.org>) — a hosted proxy service for browsing the *old*
-  web: thousands of meticulously restored historical sites (and FTP/downloads), plus
-  Wayback Machine access via a `URL:year` syntax. Different goal from the others: it does
-  not transcode the live modern web but recreates the late-90s/early-2000s internet.
-  Set it as the browser's HTTP proxy (server list at <https://protoweb.org/wiki/servers/>);
-  free, no account needed, nothing to self-host. A good period-accurate complement to the
-  live-web proxies above.
+
+Adjacent browsing extras:
+
+- **AdGuard Home** DNS adblocking is a useful later browsing improvement for Aquafox/Tiger,
+  but it belongs beside the NAS/browser route rather than inside this three-proxy stack.
 
 ## carl / cryanc — protocol notes
 
