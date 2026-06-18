@@ -1,0 +1,75 @@
+services:
+  webone:
+    image: u306060/webone:latest
+    container_name: ${WEBONE_CONTAINER_NAME:-webone}
+    restart: unless-stopped
+    ports:
+      - "${WEBONE_PORT:-8091}:8080"
+    environment:
+      - TZ=${TZ:-Europe/Brussels}
+      # SERVICE_PORT must match Port in webone.conf (internal 8080).
+      - SERVICE_PORT=8080
+      - CONFIG_PATH=/etc/webone/webone.conf
+      # Address at which the old browser reaches WebOne (IP or hostname of the NAS).
+      - PROXY_HOSTNAME=${WEBONE_HOSTNAME:?set WEBONE_HOSTNAME in .env}
+    # Optional: use your own webone.conf instead of the built-in default.
+    # volumes:
+    #   - ${WEBONE_CONFIG_FILE:-./webone.conf}:/etc/webone/webone.conf
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    networks:
+      - proxynet
+
+  cryanc:
+    # No official image: carl is built from source (see ./cryanc/Dockerfile).
+    # For Portainer CE: use ghcr.io/tommiec/cryanc-carl:latest (built by GitHub Actions).
+    build:
+      context: ./cryanc
+      args:
+        CRYANC_REF: ${CRYANC_REF:-main}
+    image: ${CRYANC_IMAGE:-cryanc-carl:local}
+    container_name: ${CRYANC_CONTAINER_NAME:-cryanc}
+    restart: unless-stopped
+    ports:
+      - "${CRYANC_PORT:-8767}:8765"
+    environment:
+      - TZ=${TZ:-Europe/Brussels}
+      # Internal listen port (socat); keep equal to the container port above.
+      - CARL_PORT=8765
+      # Options for carl(1): -p = proxy mode, -t = timeouts off (needed on a slow G3).
+      - CARL_OPTS=${CARL_OPTS:--p -t}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    labels:
+      # Locally built image: Watchtower cannot update this.
+      - com.centurylinklabs.watchtower.enable=false
+    networks:
+      - proxynet
+
+  macproxy:
+    # Modern Python proxy: validates certificates upstream and transcodes
+    # to simple HTML. Extensions (Wikipedia, Wayback, weather...) via config.py.
+    image: rdmark/macproxy:latest
+    container_name: ${MACPROXY_CONTAINER_NAME:-macproxy}
+    restart: unless-stopped
+    ports:
+      - "${MACPROXY_PORT:-5003}:5001"
+    environment:
+      - TZ=${TZ:-Europe/Brussels}
+    # Optional: your own config.py (enable/disable extensions, US zip for weather...).
+    # volumes:
+    #   - ${MACPROXY_CONFIG_FILE:-./macproxy-config.py}:/app/config.py
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    driver: bridge
