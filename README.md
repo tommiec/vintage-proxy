@@ -12,9 +12,6 @@ No sensitive logins or banking through this machine. Macproxy/WebOne validate up
 certificates, but between the iMac and the NAS the traffic is local proxy traffic. `carl`
 is opportunistic compatibility, not a secure TLS solution.
 
-A later VPN layer (gluetun → ProtonVPN) is deliberately not yet included; see the
-[Future: VPN Layer](#future-vpn-layer) section at the bottom.
-
 ## Screenshots
 
 ![Aquafox on the iMac G3 loading the Wikipedia iMac G3 article via Macproxy](assets/screenshot.jpg)
@@ -208,8 +205,3 @@ To update:
 
 The `cryanc` container runs as a non-root user, with `no-new-privileges`, without extra
 Linux capabilities, and with a simple TCP healthcheck on the internal `CARL_PORT`.
-
-## Future: VPN Layer
-
-The stack can later run through gluetun/ProtonVPN. That mainly helps with privacy, not
-with browser security. It does not fix `carl`'s missing certificate validation.
