@@ -10,8 +10,8 @@ services:
       # SERVICE_PORT must match Port in webone.conf (internal 8080).
       - SERVICE_PORT=8080
       - CONFIG_PATH=/etc/webone/webone.conf
-      # Address at which the old browser reaches WebOne (IP or hostname of the NAS).
-      - PROXY_HOSTNAME=${WEBONE_HOSTNAME:?set WEBONE_HOSTNAME in .env}
+      # Address at which the old browser reaches this host (IP or hostname).
+      - PROXY_HOSTNAME=${PROXY_HOSTNAME:?set PROXY_HOSTNAME in .env}
     # Optional: use your own webone.conf instead of the built-in default.
     # volumes:
     #   - ${WEBONE_CONFIG_FILE:-./webone.conf}:/etc/webone/webone.conf

@@ -1,7 +1,6 @@
 # Proxy Stack for the iMac G3
 
-Three proxies in one Container Manager project (`vintage-proxy`) for light web on the
-iMac G3.
+Three-service Docker Compose stack providing legacy web access for the iMac G3.
 
 - **Macproxy** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
   validation.
@@ -38,22 +37,14 @@ Host ports are configurable via `.env`.
 
 ## Usage
 
-### Portainer CE (production)
-
-Deployment is managed from the `portainer-stacks` repository. The cryanc
-image is pre-built and published to `ghcr.io/tommiec/cryanc-carl:latest` by
-GitHub Actions; no local build step needed.
-
-See `portainer-stacks/stacks/vintage-proxy/` for the compose, env template,
-and setup instructions.
-
-### Local / Container Manager (development)
-
-1. Copy `.env.example` to `.env` and fill in at least `WEBONE_HOSTNAME`
-   (the LAN IP or hostname of the NAS).
-2. In Container Manager, create a new project pointing to this folder.
-   `carl` is built from `cryanc/Dockerfile` at project start.
-3. Build & start the project.
+1. Copy `.env.example` to `.env` and set at least `PROXY_HOSTNAME` to the IP
+   or hostname of the machine running this stack.
+2. Start the stack:
+   ```sh
+   docker compose up -d --build
+   ```
+   `carl` is compiled from source on first start; allow a few minutes for the build.
+3. Configure the browser's proxy to the host IP and the relevant port (see [Ports](#ports)).
 
 ## Browser Configuration on the iMac
 
@@ -143,27 +134,29 @@ the G3.
 - Use `carl` only for OS 9/Classilla special cases.
 - Do not bind these proxies unprotected to the internet; they have no authentication.
   Keep them on your LAN.
-- WebOne and Macproxy pull `:latest` and may be updated via Watchtower.
-- `carl` image is published to GHCR by GitHub Actions; Watchtower updates it automatically.
+- WebOne and Macproxy can be updated with `docker compose pull && docker compose up -d`.
+- `carl` is published to `ghcr.io/tommiec/cryanc-carl:latest` by GitHub Actions; pull to update.
 
 ## Updates
 
-WebOne and Macproxy pull `:latest` and are updated automatically by Watchtower.
+**WebOne and Macproxy:**
 
-`carl` is published to `ghcr.io/tommiec/cryanc-carl:latest` by GitHub Actions whenever
-`cryanc/**` changes on `main`. Watchtower picks up new image versions automatically.
+```sh
+docker compose pull && docker compose up -d
+```
 
-To update `carl`:
+**`carl`:**
+
+`carl` has no official image. GitHub Actions builds and publishes
+`ghcr.io/tommiec/cryanc-carl:latest` on every push to `main` that touches `cryanc/**`.
+
+To update:
 
 1. Edit `cryanc/Dockerfile` (or bump `CRYANC_REF` to pin a specific upstream commit/tag).
 2. Push to `main` — GitHub Actions rebuilds and publishes the image.
-3. Watchtower picks it up on the next run, or force a redeploy in Portainer.
-4. Test at least the proxy start page, `https://example.com/`, and the OS 9/Classilla
-   case `carl` is meant for. Confirm working only after a short G3 test.
-
-**Local builds** (Container Manager / `docker compose up --build`): `carl` is built
-from source locally. Watchtower cannot refresh a local build; rebuild explicitly when
-needed.
+3. Pull the new image and restart: `docker compose pull cryanc && docker compose up -d cryanc`.
+4. Test at least `https://example.com/` and the OS 9/Classilla case `carl` is meant for.
+   Confirm working only after a short G3 test, not just because the container starts.
 
 The `cryanc` container runs as a non-root user, with `no-new-privileges`, without extra
 Linux capabilities, and with a simple TCP healthcheck on the internal `CARL_PORT`.
