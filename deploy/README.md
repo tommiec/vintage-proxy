@@ -17,6 +17,17 @@ ghcr.io/tommiec/cryanc-carl:latest
 - `compose.yaml` — stack definition using pre-built images only.
 - `.env.example` — template for the `.env` file; copy and fill in `PROXY_HOSTNAME`.
 
+This generic deploy compose uses Docker named volumes for AdGuard Home data:
+
+```yaml
+adguard_work:
+adguard_conf:
+```
+
+That keeps this repository portable. A NAS-specific GitOps repository may
+replace those named volumes with host bind mounts if it wants all runtime data
+under one backup/cleanup root.
+
 ## Setup
 
 1. Copy `.env.example` to `.env` alongside `compose.yaml` and set `PROXY_HOSTNAME`.
