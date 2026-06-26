@@ -101,7 +101,7 @@ services:
     container_name: ${BROWSERVICE_CONTAINER_NAME:-browservice}
     restart: unless-stopped
     ports:
-      - "${BROWSERVICE_PORT:-8082}:8080"
+      - "${BROWSERVICE_PORT:-8083}:8080"
     environment:
       - TZ=${TZ:-Europe/Brussels}
     volumes:

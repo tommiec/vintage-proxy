@@ -30,7 +30,7 @@ Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this 
 | Daily on Tiger/Aquafox | Macproxy | `5003` | Fastest, plain HTML. |
 | More layout/images | WebOne | `8091` | Richer, heavier. |
 | OS 9/Classilla | `carl` | `8767` | No certificate validation; not for Tiger. |
-| Modern sites (Tiger + OS 9) | Browservice | `8082` | Full Chromium server-side; JPEG stream to client. |
+| Modern sites (Tiger + OS 9) | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. |
 
 ## Ports
 
@@ -39,7 +39,7 @@ Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this 
 | Macproxy | `5003` | `5001` |
 | WebOne   | `8091` | `8080` |
 | carl     | `8767` | `8765` |
-| Browservice | `8082` | `8080` |
+| Browservice | `8083` | `8080` |
 | AdGuard Home DNS   | `5354` (set `53` in `.env` for G3 use) | `53` |
 | AdGuard Home setup | `3080` | `3000` |
 | AdGuard Home admin | `3001` | `80` |
@@ -122,7 +122,7 @@ to load images and submit basic form data.
 Browservice is **not** a standard HTTP proxy — point the browser directly at the
 Browservice URL, not at a proxy setting.
 
-On Tiger/Aquafox or Safari: open `http://<NAS-IP>:8080/` in the browser. Browservice
+On Tiger/Aquafox or Safari: open `http://<NAS-IP>:8083/` in the browser. Browservice
 presents a start page from which you navigate; all rendering happens on the server.
 
 ### Updating Browservice
