@@ -87,8 +87,9 @@ services:
       - "8083:8080"
     volumes:
       - browservice_data:/data
+    cap_add:
+      - SYS_ADMIN
     security_opt:
-      - no-new-privileges:true
       - seccomp=unconfined
     labels:
       - com.centurylinklabs.watchtower.enable=true

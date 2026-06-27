@@ -9,7 +9,8 @@ Docker Compose stack providing legacy web access for the iMac G3.
   validation.
 - **Browservice** — server-side Chromium rendering; streams pages as JPEG frames so the
   iMac needs no JavaScript, TLS, or CSS support. Use for modern sites that break with
-  the other proxies. Works on both Tiger and OS 9.
+  the other proxies. Expected to work on both Tiger and OS 9 (validate on the G3 —
+  PowerPC/m68k support is not tested by the upstream maintainer).
 - **AdGuard Home** — standalone DNS blocker; optional for the G3 and independent of the
   browser proxy choice.
 
@@ -30,7 +31,7 @@ Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this 
 | Daily on Tiger/Aquafox | Macproxy | `5003` | Fastest, plain HTML. |
 | More layout/images | WebOne | `8091` | Richer, heavier. |
 | OS 9/Classilla | `carl` | `8767` | No certificate validation; not for Tiger. |
-| Modern sites (Tiger + OS 9) | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. |
+| Modern sites (Tiger + OS 9) | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. Validate on G3 — PPC not tested upstream. |
 
 ## Ports
 
