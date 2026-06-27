@@ -139,12 +139,15 @@ build time. To update:
 ### Docker notes
 
 Browservice uses Chromium/CEF. The `chrome-sandbox` binary is set to root-owned mode
-`4755` in the Dockerfile so the SUID sandbox works without extra container privileges.
-The compose file sets `seccomp=unconfined` because Docker's default seccomp profile
-blocks some syscalls Chromium needs. Browservice keeps its runtime home inside the
-container; no host bind mount is needed unless we later decide to preserve browser
-sessions, cache, or installed fonts across container replacement. Do not run this proxy
-on an internet-exposed host without additional network-level protection.
+`4755` in the Dockerfile so the SUID sandbox can run as the non-root `browservice`
+user. The compose file grants `SYS_ADMIN` and sets `seccomp=unconfined` because
+Synology DSM disables unprivileged user namespaces and Docker's default seccomp
+profile blocks some Chromium syscalls. Do not add `no-new-privileges:true` to
+Browservice; it blocks the setuid bit. Browservice keeps its runtime home inside
+the container; no host bind mount is needed unless we later decide to preserve
+browser sessions, cache, or installed fonts across container replacement. Do not
+run this proxy on an internet-exposed host without additional network-level
+protection.
 
 ## AdGuard Home DNS on the G3
 
