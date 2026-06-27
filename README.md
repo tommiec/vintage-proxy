@@ -138,9 +138,10 @@ build time. To update:
 
 ### Docker notes
 
-Browservice uses Chromium/CEF, which requires the `SYS_ADMIN` capability inside Docker
-so the Chromium sandbox can run normally. The compose file also sets `seccomp=unconfined`
-to allow the syscalls CEF needs. Do not run this proxy on an internet-exposed host
+Browservice uses Chromium/CEF. The `chrome-sandbox` binary is set to root-owned mode
+`4755` in the Dockerfile so the SUID sandbox works without extra container privileges.
+The compose file sets `seccomp=unconfined` because Docker's default seccomp profile
+blocks some syscalls Chromium needs. Do not run this proxy on an internet-exposed host
 without additional network-level protection.
 
 ## AdGuard Home DNS on the G3
