@@ -10,8 +10,8 @@
 # Docker. The GitHub API is queried at build time so every image build picks
 # up the latest release automatically.
 #
-# Chromium/CEF requires either the SYS_ADMIN capability or --no-sandbox.
-# We pass --no-sandbox; see compose.yaml for the cap_add note.
+# Chromium/CEF sandbox requires SYS_ADMIN in Docker; set cap_add: [SYS_ADMIN]
+# in compose.yaml. Do NOT pass --no-sandbox — Browservice rejects it.
 
 FROM ubuntu:22.04
 
@@ -43,16 +43,11 @@ RUN mkdir -p /data \
 
 VOLUME ["/data"]
 
-ENV BROWSERVICE_PORT=8080
-
 EXPOSE 8080
 
 USER browservice
 WORKDIR /data
 
-# --no-sandbox is required for Chromium/CEF inside Docker without SYS_ADMIN.
-# --http-listen-addr binds to all interfaces so the host can reach it.
-# Adjust port via the BROWSERVICE_PORT env var or override the CMD.
-CMD ["/opt/browservice/AppRun", \
-     "--http-listen-addr=0.0.0.0:8080", \
-     "--no-sandbox"]
+# --vice-opt-http-listen-addr is the current option name (--http-listen-addr is deprecated).
+# SYS_ADMIN capability (set in compose) allows the Chromium sandbox to run normally.
+CMD ["/opt/browservice/AppRun", "--vice-opt-http-listen-addr=0.0.0.0:8080"]

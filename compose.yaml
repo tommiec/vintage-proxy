@@ -106,10 +106,11 @@ services:
       - TZ=${TZ:-Europe/Brussels}
     volumes:
       - browservice_data:/data
-    # --no-sandbox requires disabling the seccomp profile, or grant SYS_ADMIN.
-    # seccomp=unconfined is the practical choice for Chromium in Docker.
+    # Chromium/CEF requires SYS_ADMIN to run its sandbox inside Docker.
+    # seccomp=unconfined relaxes the default seccomp filter that blocks some syscalls CEF needs.
+    cap_add:
+      - SYS_ADMIN
     security_opt:
-      - no-new-privileges:true
       - seccomp=unconfined
     labels:
       # Locally built image: Watchtower cannot update this.
