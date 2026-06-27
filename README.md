@@ -27,36 +27,28 @@ is opportunistic compatibility, not a secure TLS solution.
 Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this order.
 
 **Macproxy, WebOne, and carl are HTTP proxies** — you configure them once in the OS or browser
-proxy settings and then browse normally with Safari's own address bar. The proxy works invisibly
-in the background.
+proxy settings and then browse normally with the browser's own address bar. The proxy works
+invisibly in the background.
 
 **Browservice is different** — do not configure it as a proxy. Instead, surf directly to
 `http://<NAS-IP>:8083/` and type the destination URL inside the Browservice interface. You are
-then looking at a live Chromium browser running on the server, streamed as images to Safari.
+then looking at a live Chromium browser running on the server, streamed as images to the iMac.
 Use it as a last resort when Macproxy and WebOne cannot handle a site.
 
-| Use | Proxy | Port | How to use |
-| --- | --- | --- | --- |
-| Daily on Tiger/Aquafox | Macproxy | `5003` | Set as HTTP proxy in OS/browser settings. |
-| More layout/images | WebOne | `8091` | Set as HTTP proxy in OS/browser settings. |
-| OS 9/Classilla | `carl` | `8767` | Set as HTTP proxy; no certificate validation; not for Tiger. |
-| Modern sites (last resort) | Browservice | `8083` | Surf to `http://<NAS-IP>:8083/` and type URL inside. Not validated on the G3 yet. |
+The table below combines the recommended use, the port, how to point the browser at it, and
+what has actually been tested on the G3 (Mac OS X Tiger unless noted):
 
-## Tested Setup
+| Use | Service | Port | How to point the browser | Tested on the G3 |
+| --- | --- | --- | --- | --- |
+| Daily browsing (Safari) | Macproxy | `5003` | HTTP proxy in the OS X network settings | Yes |
+| More layout/images (Aquafox) | WebOne | `8091` | HTTP proxy in Aquafox's own settings | Yes |
+| Modern sites, last resort | Browservice | `8083` | Open `http://<NAS-IP>:8083/` directly; use its in-page address bar | Yes, as an option |
+| OS 9 / Classilla | `carl` | `8767` | HTTP proxy; no certificate validation; not for Tiger | Not yet |
+| DNS-wide ad/tracker filtering | AdGuard Home | — | Set as the DNS server in the network settings | Yes |
 
-Tested deployment: Synology DS920+ running Docker / Portainer. Other Linux Docker
-hosts should work, but may need adjustments for ports, capabilities, and persistent
-volume paths.
-
-The current tested client setup on the iMac G3 is:
-
-| Client | Tested configuration | Status |
-|--------|----------------------|--------|
-| Safari on Mac OS X Tiger | Macproxy configured in the OS X system/network proxy settings | Tested |
-| Aquafox on Mac OS X Tiger | WebOne configured in Aquafox's browser proxy settings | Tested |
-| Safari or Aquafox on Mac OS X Tiger | Browservice opened directly at `http://<NAS-IP>:8083/` | Tested as an option; use Browservice's in-page address bar |
-| Mac OS X Tiger network settings | AdGuard Home configured as DNS server | Tested |
-| OS 9 / Classilla | `carl` as HTTP proxy | Not tested yet |
+Tested deployment platform: Synology DS920+ running Docker / Portainer. Other Linux Docker
+hosts should work, but may need adjustments for ports, capabilities, and persistent volume
+paths.
 
 ## Ports
 
@@ -105,10 +97,9 @@ repository and want to publish your own images, update the image names in
 
 ## Browser Configuration on the iMac
 
-This section covers **Macproxy and WebOne**, the two HTTP proxies. You can configure them
-in the OS or in an individual browser. The tested setup uses Macproxy in the OS X
-system/network proxy settings for Safari, and WebOne in Aquafox's own browser proxy
-settings. Browservice is not a proxy and is covered separately in [Browservice](#browservice).
+This section gives the step-by-step proxy settings for **Macproxy and WebOne**; see
+[Choice](#choice) for which service to use when. Browservice is not a proxy and is covered
+separately in [Browservice](#browservice).
 
 Do not browse to the proxy URL itself. WebOne will show a "looped connection" page if you
 do — that just means it is reachable.
