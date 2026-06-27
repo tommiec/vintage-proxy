@@ -43,10 +43,7 @@ RUN chown root:root /opt/browservice/opt/browservice/chrome-sandbox \
     && chmod 4755 /opt/browservice/opt/browservice/chrome-sandbox
 
 RUN useradd -r -s /sbin/nologin -m -d /home/browservice browservice \
-    && mkdir -p /home/browservice/.browservice /tmp/.X11-unix \
-    && chown -R browservice:browservice /home/browservice \
-    && chown root:root /tmp/.X11-unix \
-    && chmod 1777 /tmp/.X11-unix
+    && chown -R browservice:browservice /home/browservice
 
 EXPOSE 8080
 

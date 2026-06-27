@@ -105,7 +105,8 @@ services:
     environment:
       - TZ=${TZ:-Europe/Brussels}
     # seccomp=unconfined: Docker's default profile blocks some syscalls Chromium needs.
-    # The SUID sandbox (chrome-sandbox, mode 4755 set in Dockerfile) handles process isolation.
+    # The SUID sandbox (chrome-sandbox, mode 4755 in image) handles process isolation.
+    # Do NOT add no-new-privileges:true — it blocks the chrome-sandbox setuid bit.
     security_opt:
       - seccomp=unconfined
     labels:
