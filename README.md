@@ -1,5 +1,8 @@
 # Proxy Stack for the iMac G3
 
+[![Build cryanc](https://github.com/tommiec/vintage-proxies/actions/workflows/build-cryanc.yml/badge.svg)](https://github.com/tommiec/vintage-proxies/actions/workflows/build-cryanc.yml)
+[![Build browservice](https://github.com/tommiec/vintage-proxies/actions/workflows/build-browservice.yml/badge.svg)](https://github.com/tommiec/vintage-proxies/actions/workflows/build-browservice.yml)
+
 Docker Compose stack providing legacy web access for the iMac G3.
 
 - **[Macproxy](https://github.com/rdmark/macproxy_classic)** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
@@ -35,20 +38,24 @@ invisibly in the background.
 then looking at a live Chromium browser running on the server, streamed as images to the iMac.
 Use it as a last resort when Macproxy and WebOne cannot handle a site.
 
-The table below combines the recommended use, the port, how to point the browser at it, and
-what has actually been tested on the G3 (Mac OS X Tiger unless noted):
+The table below combines the recommended use, the port, and how to point the
+browser at it:
 
-| Use | Service | Port | How to point the browser | Tested on the G3 |
-| --- | --- | --- | --- | --- |
-| Daily browsing (Safari) | Macproxy | `5003` | HTTP proxy in the OS X network settings | Yes |
-| More layout/images (Aquafox) | WebOne | `8091` | HTTP proxy in Aquafox's own settings | Yes |
-| Modern sites, last resort | Browservice | `8083` | Open `http://<NAS-IP>:8083/` directly; use its in-page address bar | Yes, as an option |
-| OS 9 / Classilla | `carl` | `8767` | HTTP proxy; no certificate validation; not for Tiger | Not yet |
-| DNS-wide ad/tracker filtering | AdGuard Home | — | Set as the DNS server in the network settings | Yes |
+| Use | Service | Port | How to point the browser |
+| --- | --- | --- | --- |
+| Daily browsing (Safari) | Macproxy | `5003` | HTTP proxy in the OS X network settings |
+| More layout/images (Aquafox) | WebOne | `8091` | HTTP proxy in Aquafox's own settings |
+| Modern sites, last resort | Browservice | `8083` | Open `http://<NAS-IP>:8083/` directly; use its in-page address bar |
+| OS 9 / Classilla | `carl` | `8767` | HTTP proxy; no certificate validation; not for Tiger |
+| DNS-wide ad/tracker filtering | AdGuard Home | — | Set as the DNS server in the network settings |
 
-Tested deployment platform: Synology DS920+ running Docker / Portainer. Other Linux Docker
-hosts should work, but may need adjustments for ports, capabilities, and persistent volume
-paths.
+Current deployment target: Synology DS920+ running Docker / Portainer. Other Linux
+Docker hosts should work, but may need adjustments for ports, capabilities, and
+persistent volume paths.
+
+**Platform requirement: x86_64 only.** The Browservice AppImage is x86_64-only and will
+not run on ARM-based NAS devices (DS220j, DS420j, …) or Apple Silicon. All other services
+(Macproxy, WebOne, carl, AdGuard Home) are multi-arch and run on ARM without changes.
 
 ## Ports
 
@@ -63,6 +70,12 @@ paths.
 | AdGuard Home admin | `3001` | `80` |
 
 Host ports are configurable via `.env`.
+
+## Requirements
+
+- **Docker with Compose v2** — use `docker compose` (plugin), not the legacy `docker-compose` wrapper.
+- **Linux x86_64 host** — Browservice fetches an x86_64 AppImage at build time and will not run on ARM.
+  Other services have no architecture restriction.
 
 ## Usage
 
@@ -91,9 +104,15 @@ ghcr.io/tommiec/browservice:latest
 See [deploy/](deploy/) for a pre-built-images stack and `.env` template. The real
 deployment journal can still live in a separate GitOps repository.
 
-The GHCR images above must be public for unauthenticated pulls. If you fork this
-repository and want to publish your own images, update the image names in
-`deploy/compose.yaml` and in your deployment repository.
+## Forking
+
+To publish your own images after forking:
+
+1. Push any change to `cryanc/` or `browservice/` — GitHub Actions builds and publishes
+   `ghcr.io/<your-username>/cryanc-carl:latest` and `ghcr.io/<your-username>/browservice:latest`.
+2. Go to **your GitHub profile → Packages**, open each package, and set it to **Public**.
+   GHCR packages default to private; the NAS cannot pull them without authentication.
+3. Update the two image names in `deploy/compose.yaml` to match your username.
 
 ## Browser Configuration on the iMac
 
