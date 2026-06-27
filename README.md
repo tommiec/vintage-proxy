@@ -2,16 +2,16 @@
 
 Docker Compose stack providing legacy web access for the iMac G3.
 
-- **Macproxy** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
+- **[Macproxy](https://github.com/rdmark/macproxy)** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
   validation.
-- **WebOne** — fallback when you want more layout/images; richer but slower.
-- **Crypto Ancienne (`carl`)** — only for OS 9/Classilla special cases; no certificate
+- **[WebOne](https://github.com/u306060/webone)** — fallback when you want more layout/images; richer but slower.
+- **[Crypto Ancienne (`carl`)](https://github.com/classilla/cryanc)** — only for OS 9/Classilla special cases; no certificate
   validation.
-- **Browservice** — server-side Chromium rendering; streams pages as JPEG frames so the
+- **[Browservice](https://github.com/ttalvitie/browservice)** — server-side Chromium rendering; streams pages as JPEG frames so the
   iMac needs no JavaScript, TLS, or CSS support. Treat it as a candidate for modern
   sites that break with the other proxies; Tiger and OS 9/Classilla still need
   validation on the G3, and PowerPC/m68k support is not tested upstream.
-- **AdGuard Home** — standalone DNS blocker; optional for the G3 and independent of the
+- **[AdGuard Home](https://github.com/AdguardTeam/AdGuardHome)** — standalone DNS blocker; optional for the G3 and independent of the
   browser proxy choice.
 
 No sensitive logins or banking through this machine. Macproxy/WebOne validate upstream
@@ -64,17 +64,20 @@ Host ports are configurable via `.env`.
    ```sh
    docker compose up -d --build
    ```
-   `carl` is compiled from source on first start; allow a few minutes for the build.
+   `carl` and `browservice` are compiled from source on first start; allow a few minutes
+   for the build.
 3. Configure the browser's proxy to the host IP and the relevant port (see [Ports](#ports)).
+   Browservice is not a proxy — open `http://<NAS-IP>:8083/` directly in the browser instead.
 4. Optional: use [AdGuard Home DNS](#adguard-home-dns-on-the-g3) for G3-wide DNS blocking.
 
 ## Portainer CE
 
-Portainer CE cannot use the local `build:` flow for `cryanc/carl`, so the Portainer
-stack uses the GitHub Actions image instead:
+Portainer CE cannot use the local `build:` flow for `cryanc/carl` or `browservice`,
+so the Portainer stack uses the GitHub Actions images instead:
 
 ```text
 ghcr.io/tommiec/cryanc-carl:latest
+ghcr.io/tommiec/browservice:latest
 ```
 
 See [deploy/](deploy/) for a pre-built-images stack and `.env` template. The real
@@ -282,6 +285,18 @@ Recommended first round: test Aquafox via Macproxy, then the same sites via WebO
 fallback. Test Safari only as a system-proxy check. Test `carl` only when OS 9/Classilla
 or another browser without `CONNECT` is concretely up next.
 
+### Browservice test
+
+Open `http://<NAS-IP>:8083/` directly in Safari or Aquafox (no proxy setting needed).
+Type a destination URL in the Browservice address bar and note the result.
+
+| Test | Safari via Browservice | Aquafox via Browservice | Notes |
+|------|------------------------|-------------------------|-------|
+| Browservice start page loads | | | Basic reachability. |
+| `https://example.com/` | | | Simple HTTPS page. |
+| Modern JS-heavy site | | | Main use case for Browservice. |
+| Video page (e.g. YouTube) | | | Expect audio-only or partial at best. |
+
 ## Alternatives and Candidates for Later
 
 Not part of the current stack, but documented for later evaluation.
@@ -355,3 +370,17 @@ To update:
 
 The `cryanc` container runs as a non-root user, with `no-new-privileges`, without extra
 Linux capabilities, and with a simple TCP healthcheck on the internal `CARL_PORT`.
+
+## Credits
+
+This repository is a Docker Compose wrapper. All the actual work is done by these upstream
+projects — credits and thanks go to their authors and contributors:
+
+| Project | Author | Repository |
+|---------|--------|------------|
+| Macproxy | rdmark | <https://github.com/rdmark/macproxy> |
+| WebOne | u306060 | <https://github.com/u306060/webone> |
+| Crypto Ancienne (carl) | Cameron Kaiser | <https://github.com/classilla/cryanc> |
+| Browservice | Topi Talvitie | <https://github.com/ttalvitie/browservice> |
+| AdGuard Home | AdGuard Team | <https://github.com/AdguardTeam/AdGuardHome> |
+| HaGeZi DNS blocklists | hagezi | <https://github.com/hagezi/dns-blocklists> |
