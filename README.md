@@ -55,6 +55,7 @@ The current tested client setup on the iMac G3 is:
 | Safari on Mac OS X Tiger | Macproxy configured in the OS X system/network proxy settings | Tested |
 | Aquafox on Mac OS X Tiger | WebOne configured in Aquafox's browser proxy settings | Tested |
 | Safari or Aquafox on Mac OS X Tiger | Browservice opened directly at `http://<NAS-IP>:8083/` | Tested as an option; use Browservice's in-page address bar |
+| Mac OS X Tiger network settings | AdGuard Home configured as DNS server | Tested |
 | OS 9 / Classilla | `carl` as HTTP proxy | Not tested yet |
 
 ## Ports
