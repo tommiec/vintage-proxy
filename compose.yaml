@@ -104,8 +104,6 @@ services:
       - "${BROWSERVICE_PORT:-8083}:8080"
     environment:
       - TZ=${TZ:-Europe/Brussels}
-    volumes:
-      - browservice_data:/data
     # Chromium/CEF requires SYS_ADMIN to run its sandbox inside Docker.
     # seccomp=unconfined relaxes the default seccomp filter that blocks some syscalls CEF needs.
     cap_add:
@@ -125,4 +123,3 @@ networks:
 volumes:
   adguard_work:
   adguard_conf:
-  browservice_data:

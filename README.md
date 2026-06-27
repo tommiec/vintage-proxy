@@ -8,9 +8,9 @@ Docker Compose stack providing legacy web access for the iMac G3.
 - **Crypto Ancienne (`carl`)** — only for OS 9/Classilla special cases; no certificate
   validation.
 - **Browservice** — server-side Chromium rendering; streams pages as JPEG frames so the
-  iMac needs no JavaScript, TLS, or CSS support. Use for modern sites that break with
-  the other proxies. Expected to work on both Tiger and OS 9 (validate on the G3 —
-  PowerPC/m68k support is not tested by the upstream maintainer).
+  iMac needs no JavaScript, TLS, or CSS support. Treat it as a candidate for modern
+  sites that break with the other proxies; Tiger and OS 9/Classilla still need
+  validation on the G3, and PowerPC/m68k support is not tested upstream.
 - **AdGuard Home** — standalone DNS blocker; optional for the G3 and independent of the
   browser proxy choice.
 
@@ -31,7 +31,7 @@ Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this 
 | Daily on Tiger/Aquafox | Macproxy | `5003` | Fastest, plain HTML. |
 | More layout/images | WebOne | `8091` | Richer, heavier. |
 | OS 9/Classilla | `carl` | `8767` | No certificate validation; not for Tiger. |
-| Modern sites (Tiger + OS 9) | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. Validate on G3 — PPC not tested upstream. |
+| Modern sites candidate | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. Not validated on the G3 yet; PPC is not tested upstream. |
 
 ## Ports
 
@@ -114,9 +114,10 @@ as JPEG frames over HTTP to the client browser. The iMac sends only mouse/keyboa
 events and receives images — no JavaScript execution, no TLS handshake, no modern CSS
 parsing happens on the G3 side.
 
-Use it when Macproxy or WebOne cannot render a page you actually need. It works with
-both Tiger browsers (Aquafox, Safari) and OS 9/Classilla because the client only needs
-to load images and submit basic form data.
+Use it when Macproxy or WebOne cannot render a page you actually need. It is a
+candidate for Tiger browsers (Aquafox, Safari) and OS 9/Classilla because the client
+only needs to load images and submit basic form data, but it still needs validation
+on the G3.
 
 ### Browser configuration for Browservice
 

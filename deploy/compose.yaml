@@ -85,8 +85,6 @@ services:
       - .env
     ports:
       - "8083:8080"
-    volumes:
-      - browservice_data:/data
     cap_add:
       - SYS_ADMIN
     security_opt:
@@ -104,4 +102,3 @@ networks:
 volumes:
   adguard_work:
   adguard_conf:
-  browservice_data:
