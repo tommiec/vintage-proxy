@@ -42,11 +42,17 @@ RUN set -eux; \
 RUN chown root:root /opt/browservice/opt/browservice/chrome-sandbox \
     && chmod 4755 /opt/browservice/opt/browservice/chrome-sandbox
 
-RUN useradd -r -s /sbin/nologin browservice
+RUN useradd -r -s /sbin/nologin -m -d /home/browservice browservice \
+    && mkdir -p /home/browservice/.browservice /tmp/.X11-unix \
+    && chown -R browservice:browservice /home/browservice \
+    && chown root:root /tmp/.X11-unix \
+    && chmod 1777 /tmp/.X11-unix
 
 EXPOSE 8080
 
 USER browservice
+ENV HOME=/home/browservice
+WORKDIR /home/browservice
 
 # --vice-opt-http-listen-addr is the current option name (--http-listen-addr is deprecated).
 CMD ["/opt/browservice/AppRun", "--vice-opt-http-listen-addr=0.0.0.0:8080"]
