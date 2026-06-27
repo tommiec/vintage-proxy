@@ -53,4 +53,8 @@ ENV HOME=/home/browservice
 WORKDIR /home/browservice
 
 # --vice-opt-http-listen-addr is the current option name (--http-listen-addr is deprecated).
-CMD ["/opt/browservice/AppRun", "--vice-opt-http-listen-addr=0.0.0.0:8080"]
+# --disable-gpu: no GPU in Docker; without this Chromium attempts Vulkan, finds no driver,
+# and crashes with a stack smash. Software rasterizer takes over cleanly with this flag.
+CMD ["/opt/browservice/AppRun", \
+     "--vice-opt-http-listen-addr=0.0.0.0:8080", \
+     "--chromium-args=--disable-gpu --disable-features=Vulkan"]
