@@ -26,12 +26,21 @@ is opportunistic compatibility, not a secure TLS solution.
 
 Finding on the G3: pages load faster with Macproxy than with WebOne. Hence this order.
 
-| Use | Proxy | Port | Note |
+**Macproxy, WebOne, and carl are HTTP proxies** — you configure them once in the OS or browser
+proxy settings and then browse normally with Safari's own address bar. The proxy works invisibly
+in the background.
+
+**Browservice is different** — do not configure it as a proxy. Instead, surf directly to
+`http://<NAS-IP>:8083/` and type the destination URL inside the Browservice interface. You are
+then looking at a live Chromium browser running on the server, streamed as images to Safari.
+Use it as a last resort when Macproxy and WebOne cannot handle a site.
+
+| Use | Proxy | Port | How to use |
 | --- | --- | --- | --- |
-| Daily on Tiger/Aquafox | Macproxy | `5003` | Fastest, plain HTML. |
-| More layout/images | WebOne | `8091` | Richer, heavier. |
-| OS 9/Classilla | `carl` | `8767` | No certificate validation; not for Tiger. |
-| Modern sites candidate | Browservice | `8083` | Full Chromium server-side; JPEG stream to client. Not validated on the G3 yet; PPC is not tested upstream. |
+| Daily on Tiger/Aquafox | Macproxy | `5003` | Set as HTTP proxy in OS/browser settings. |
+| More layout/images | WebOne | `8091` | Set as HTTP proxy in OS/browser settings. |
+| OS 9/Classilla | `carl` | `8767` | Set as HTTP proxy; no certificate validation; not for Tiger. |
+| Modern sites (last resort) | Browservice | `8083` | Surf to `http://<NAS-IP>:8083/` and type URL inside. Not validated on the G3 yet. |
 
 ## Ports
 
@@ -73,9 +82,14 @@ deployment journal can still live in a separate GitOps repository.
 
 ## Browser Configuration on the iMac
 
-Use the proxy as the browser's proxy setting. Do not surf to the proxy as if it were a
-website. WebOne may then show a "looped connection" page; that only means WebOne is
-reachable.
+**Macproxy and WebOne** are configured once as the system HTTP proxy. After that, Safari and
+Aquafox use their own address bar as normal — the proxy is invisible.
+
+**Browservice** is not configured as a proxy. Open `http://<NAS-IP>:8083/` directly in Safari,
+then use the address bar inside that page. Use it only when Macproxy/WebOne fail on a site.
+
+For Macproxy and WebOne: do not surf to the proxy URL itself. WebOne will show a "looped
+connection" page if you do — that just means it is reachable.
 
 Replace `<NAS-IP>` in the steps below with the IP address or hostname of the machine
 running this stack (e.g. `192.168.1.10`).
@@ -121,11 +135,10 @@ on the G3.
 
 ### Browser configuration for Browservice
 
-Browservice is **not** a standard HTTP proxy — point the browser directly at the
-Browservice URL, not at a proxy setting.
-
-On Tiger/Aquafox or Safari: open `http://<NAS-IP>:8083/` in the browser. Browservice
-presents a start page from which you navigate; all rendering happens on the server.
+Do **not** add Browservice to the proxy settings. Open `http://<NAS-IP>:8083/` directly
+in Safari or Aquafox as a regular URL. Browservice presents its own start page with an
+address bar; type the destination URL there. All rendering happens on the server — Safari
+only receives images and sends back mouse/keyboard events.
 
 ### Updating Browservice
 
