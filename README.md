@@ -44,9 +44,9 @@ Use it as a last resort when Macproxy and WebOne cannot handle a site.
 
 ## Tested Setup
 
-This stack has been deployed on a Synology DS920+ using Synology Container Manager /
-Docker. Other Linux Docker hosts should work, but may need adjustments for ports,
-capabilities, and persistent volume paths.
+Tested deployment: Synology DS920+ running Docker / Portainer. Other Linux Docker
+hosts should work, but may need adjustments for ports, capabilities, and persistent
+volume paths.
 
 The current tested client setup on the iMac G3 is:
 
