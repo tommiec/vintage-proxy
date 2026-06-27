@@ -2,9 +2,9 @@
 
 Docker Compose stack providing legacy web access for the iMac G3.
 
-- **[Macproxy](https://github.com/rdmark/macproxy)** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
+- **[Macproxy](https://github.com/rdmark/macproxy_classic)** — primary choice on Tiger/Aquafox; fast, plain HTML, upstream certificate
   validation.
-- **[WebOne](https://github.com/u306060/webone)** — fallback when you want more layout/images; richer but slower.
+- **[WebOne](https://github.com/atauenis/webone)** — fallback when you want more layout/images; richer but slower.
 - **[Crypto Ancienne (`carl`)](https://github.com/classilla/cryanc)** — only for OS 9/Classilla special cases; no certificate
   validation.
 - **[Browservice](https://github.com/ttalvitie/browservice)** — server-side Chromium rendering; streams pages as JPEG frames so the
@@ -83,6 +83,10 @@ ghcr.io/tommiec/browservice:latest
 See [deploy/](deploy/) for a pre-built-images stack and `.env` template. The real
 deployment journal can still live in a separate GitOps repository.
 
+The GHCR images above must be public for unauthenticated pulls. If you fork this
+repository and want to publish your own images, update the image names in
+`deploy/compose.yaml` and in your deployment repository.
+
 ## Browser Configuration on the iMac
 
 **Macproxy and WebOne** are configured once as the system HTTP proxy. After that, Safari and
@@ -91,7 +95,7 @@ Aquafox use their own address bar as normal — the proxy is invisible.
 **Browservice** is not configured as a proxy. Open `http://<NAS-IP>:8083/` directly in Safari,
 then use the address bar inside that page. Use it only when Macproxy/WebOne fail on a site.
 
-For Macproxy and WebOne: do not surf to the proxy URL itself. WebOne will show a "looped
+For Macproxy and WebOne: do not browse to the proxy URL itself. WebOne will show a "looped
 connection" page if you do — that just means it is reachable.
 
 Replace `<NAS-IP>` in the steps below with the IP address or hostname of the machine
@@ -194,8 +198,8 @@ In the setup wizard:
 - Keep the admin UI on internal port `80` so it remains reachable at
   `http://<NAS-IP>:3001/`.
 - Use your normal LAN resolver or router as upstream DNS. For a NAS in a server VLAN
-  behind a UDM/UniFi gateway, this is usually that VLAN gateway, for example
-  `192.168.30.1`.
+  behind a router or firewall, this is usually the gateway or resolver for that
+  server network.
 - Use plain DNS upstreams first. DoH/DoT is not needed for this use case.
 
 In **Filters -> DNS blocklists**, start small:
@@ -373,14 +377,20 @@ Linux capabilities, and with a simple TCP healthcheck on the internal `CARL_PORT
 
 ## Credits
 
-This repository is a Docker Compose wrapper. All the actual work is done by these upstream
-projects — credits and thanks go to their authors and contributors:
+This repository is a Docker Compose wrapper. All the actual proxy, browser, and DNS
+work is done by upstream projects — credits and thanks go to their authors and
+contributors:
 
-| Project | Author | Repository |
-|---------|--------|------------|
-| Macproxy | rdmark | <https://github.com/rdmark/macproxy> |
-| WebOne | u306060 | <https://github.com/u306060/webone> |
-| Crypto Ancienne (carl) | Cameron Kaiser | <https://github.com/classilla/cryanc> |
-| Browservice | Topi Talvitie | <https://github.com/ttalvitie/browservice> |
-| AdGuard Home | AdGuard Team | <https://github.com/AdguardTeam/AdGuardHome> |
-| HaGeZi DNS blocklists | hagezi | <https://github.com/hagezi/dns-blocklists> |
+| Project | Author / maintainer | Repository / image | License note |
+|---------|---------------------|--------------------|--------------|
+| Macproxy Classic | rdmark | <https://github.com/rdmark/macproxy_classic> | BSD-3-Clause |
+| WebOne | WebOne Development Team | <https://github.com/atauenis/webone> | WebOne custom permissive license; notify users about traffic changes/security implications |
+| WebOne Docker image | u306060 / way5 | `u306060/webone`, <https://github.com/way5/docker-webone> | Docker image packaging for WebOne |
+| Crypto Ancienne (`carl`) | Cameron Kaiser | <https://github.com/classilla/cryanc> | Upstream repository does not publish standard license metadata; review upstream terms before redistributing modified builds |
+| Browservice | Topi Talvitie | <https://github.com/ttalvitie/browservice> | MIT |
+| AdGuard Home | AdGuard Team | <https://github.com/AdguardTeam/AdGuardHome> | GPL-3.0 |
+| HaGeZi DNS blocklists | hagezi | <https://github.com/hagezi/dns-blocklists> | GPL-3.0 |
+
+The MIT license in this repository applies to this wrapper's compose files,
+Dockerfiles, and documentation. It does not relicense upstream software or container
+images.

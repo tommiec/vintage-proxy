@@ -13,6 +13,9 @@ ghcr.io/tommiec/cryanc-carl:latest
 ghcr.io/tommiec/browservice:latest
 ```
 
+These images must be public for unauthenticated pulls. If you fork this repository
+and publish your own images, update the image names in this compose file.
+
 ## Files
 
 - `compose.yaml` — stack definition using pre-built images only.
@@ -55,6 +58,8 @@ set the G3's DNS server to `<NAS-IP>`. See the root
 ## Updating Browservice
 
 Browservice fetches the latest AppImage at Docker build time via the GitHub API.
+The Dockerfile runs the AppImage extracted, sets the Chromium SUID sandbox helper
+permissions, and disables GPU/Vulkan/background Chromium services for Docker.
 
 1. Edit `browservice/Dockerfile` (bump a comment or the base image) and push to `main`.
 2. GitHub Actions rebuilds and publishes `ghcr.io/tommiec/browservice:latest`.
