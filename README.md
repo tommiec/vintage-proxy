@@ -101,8 +101,11 @@ ghcr.io/tommiec/cryanc-carl:latest
 ghcr.io/tommiec/browservice:latest
 ```
 
-See [deploy/](deploy/) for a pre-built-images stack and `.env` template. The real
-deployment journal can still live in a separate GitOps repository.
+See [deploy/](deploy/) for a portable pre-built-images stack and `.env` template.
+For this NAS, the deployment source of truth is
+[`portainer-stacks/stacks/vintage-proxies/compose.yaml`](../portainer-stacks/stacks/vintage-proxies/compose.yaml);
+`deploy/compose.yaml` remains the portable/manual alternative. The deployment
+journal lives with that NAS GitOps stack.
 
 ## Forking
 
